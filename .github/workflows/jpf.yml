@@ -25,12 +25,11 @@ jobs:
     - name: Build project
       run: ./gradlew build -x test -x lint
 
-    - name: Download JPF core
+    - name: Clone and build jpf-core
       run: |
-        mkdir -p ~/jpf-core
-        cd ~/jpf-core
-        git clone https://github.com/javapathfinder/jpf-core.git .
-        ./gradlew assemble
+        git clone https://github.com/javapathfinder/jpf-core.git /tmp/jpf-core
+        cd /tmp/jpf-core
+        ./gradlew buildJars
 
     - name: Run JPF on JAR files
       run: |
@@ -40,7 +39,7 @@ jobs:
         directory=$(pwd)
 
         # Define the path to the RunJPF.jar file
-        runjpf_jar="$HOME/jpf-core/build/RunJPF.jar"
+        runjpf_jar="/tmp/jpf-core/build/RunJPF.jar"
 
         # Find all .jar files in the specified directory and its subdirectories, excluding those with "SNAPSHOT" in the name
         jar_files=$(find "$directory" -type f -name "*.jar")
