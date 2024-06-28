@@ -46,7 +46,11 @@ jobs:
         do
             jar_dir=$(dirname "$jar_file")
             main_class=$(unzip -p "$jar_file" META-INF/MANIFEST.MF | grep -i 'Main-Class' | awk -F': ' '{print $2}' | tr -d '\r')
-
+            
+            if ! unzip -l "$jar_file" 2>/dev/null | grep -q "META-INF/MANIFEST.MF"; then
+                continue
+            fi
+            
             if [ -z "$main_class" ]; then
                 continue
             fi
